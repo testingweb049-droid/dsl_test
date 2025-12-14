@@ -12,8 +12,8 @@ type Slide = {
 
 export default function NewHeroSection() {
   const slides: Slide[] = [
-    { src: "/manhattan-skyline.jpg", alt: "Hero image 2", title: "Luxury Travel & Chauffeured Service" },
-    { src: "/brunette-businesswoman-posing-inside-car.jpg", alt: "Hero image 1", title: "The Best Fleet Service in New York" },
+    { src: "/why-choose-us.png", alt: "Hero image 2", title: "Airport Transfer & Chauffeured Service" },
+    { src: "/slide.JPG", alt: "Hero image 1", title: "The Best Fleet Service in New York" },
     { src: "/3rd.png", alt: "Hero image 3", title: "Airport Chauffeur Service To and From JFK, LGA, EWR, TEB" },
   ];
 
@@ -29,7 +29,7 @@ export default function NewHeroSection() {
     if (!isPaused) {
       timeoutRef.current = window.setTimeout(() => {
         setIndex((i) => (i + 1) % slides.length);
-      }, 6000);
+      }, 4000);
     }
 
     return () => {
@@ -78,10 +78,10 @@ export default function NewHeroSection() {
               alt={s.alt ?? `Slide ${i + 1}`}
               fill
               sizes="100vw"
-              className={`object-cover w-full h-full ${i===2 ? 'lg:scale-x-[-1]' : ''}  `}
+              className={`object-cover object-bottom w-full h-full ${i===2 ? 'lg:scale-x-[-1]' : ''}  `}
               priority={i === index}
             />
-            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-black/60" />
           </div>
         ))}
       </div>
@@ -92,7 +92,7 @@ export default function NewHeroSection() {
             <h1 className="text-2xl font-semibold lg:text-7xl text-white leading-tight">
               {slides[index].title}
             </h1>
-            <div className="text-base lg:text-2xl text-white font-bold">
+            <div className="text-base lg:text-2xl text-[#1EACC7] font-extrabold drop-shadow-lg">
               5% OFF on One Way & 10% OFF on Return
             </div>
           </div>
