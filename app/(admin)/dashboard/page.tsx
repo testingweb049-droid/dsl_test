@@ -1,5 +1,7 @@
 "use client";
 
+import { formatNYDate } from "@/lib/timezone";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -92,11 +94,8 @@ export default function AdminDashboard() {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "N/A";
     try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
+      // Dates are stored in NY timezone format (yyyy-MM-dd), display as NY timezone
+      return formatNYDate(dateString);
     } catch {
       return "N/A";
     }
