@@ -56,18 +56,39 @@ export function convertToNYTimezone(
 
 /**
  * Format a date string (yyyy-MM-dd) that is stored in NY timezone format
- * @param dateStr Date string in format "yyyy-MM-dd" (stored in NY timezone)
+ * @param dateStr Date string in format "yyyy-MM-dd" or ISO string (stored in NY timezone)
  * @returns Formatted date string (e.g., "Dec 25, 2024")
  */
 export function formatNYDate(dateStr: string | null | undefined): string {
   if (!dateStr) return "N/A";
 
   try {
-    // Parse the date string (already in NY timezone format yyyy-MM-dd)
-    const [year, month, day] = dateStr.split("-").map(Number);
+    let date: Date;
     
-    // Create a date object and format it
-    const date = new Date(year, month - 1, day);
+    // Check if it's in yyyy-MM-dd format
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      // Parse the date string (already in NY timezone format yyyy-MM-dd)
+      const [year, month, day] = dateStr.split("-").map(Number);
+      date = new Date(year, month - 1, day);
+    } else {
+      // Try parsing as ISO string or other date format
+      date = new Date(dateStr);
+      if (isNaN(date.getTime())) {
+        // If still invalid, try extracting just the date part
+        const dateMatch = dateStr.match(/(\d{4}-\d{2}-\d{2})/);
+        if (dateMatch) {
+          const [year, month, day] = dateMatch[1].split("-").map(Number);
+          date = new Date(year, month - 1, day);
+        } else {
+          throw new Error("Invalid date format");
+        }
+      }
+    }
+    
+    // Validate the date is valid
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date");
+    }
     
     return date.toLocaleDateString("en-US", {
       day: "2-digit",
@@ -75,8 +96,8 @@ export function formatNYDate(dateStr: string | null | undefined): string {
       year: "numeric",
     });
   } catch (error) {
-    console.error("Error formatting NY date:", error);
-    return dateStr;
+    console.error("Error formatting NY date:", error, "Input:", dateStr);
+    return "Invalid Date";
   }
 }
 

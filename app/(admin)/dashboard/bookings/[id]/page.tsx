@@ -97,12 +97,8 @@ export default function BookingDetailPage() {
           const orderData = result.order;
           const formattedOrder: OrderProps = {
             ...orderData,
-            pickup_date: orderData.pickup_date
-              ? new Date(orderData.pickup_date).toISOString()
-              : null,
-            return_date: orderData.return_date
-              ? new Date(orderData.return_date).toISOString()
-              : null,
+            // Keep pickup_date and return_date as-is (they're already in yyyy-MM-dd format)
+            // Only convert created_at to ISO string since it's a timestamp
             created_at: orderData.created_at
               ? new Date(orderData.created_at).toISOString()
               : new Date().toISOString(),
