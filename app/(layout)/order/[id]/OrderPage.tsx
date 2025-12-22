@@ -120,10 +120,10 @@ function OrderPage({ id }: { id: string }) {
     }
   }, [id])
 
-  const toMiles = (km?: string | null): string => {
-    if (!km) return "0"
-    const num = parseFloat(km)
-    return isNaN(num) ? "0" : (num * 0.621371).toFixed(2)
+  const formatMiles = (miles?: string | null): string => {
+    if (!miles) return "0"
+    const num = parseFloat(miles)
+    return isNaN(num) ? "0" : num.toFixed(2)
   }
 
   const formatPrice = (price: string | null | undefined): string => {
@@ -249,7 +249,7 @@ function OrderPage({ id }: { id: string }) {
             ) : (
               <SummaryCard 
                 label="Distance" 
-                value={`${toMiles(order.distance)} miles`} 
+                value={`${formatMiles(order.distance)} miles`} 
               />
             )}
             <SummaryCard 
