@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Search, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaPhone, FaInstagram, FaWhatsapp } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
 interface NavItem {
   label: string;
   path: string;
@@ -88,10 +87,6 @@ const HeaderBar: React.FC = () => {
           })}
         </ul>
 
-        {/* Desktop search */}
-        <div className="hidden md:block absolute right-[20%] top-1/2 -translate-y-1/2 z-20">
-          <Search className="w-[15px] h-[15px] text-[#ededed] cursor-pointer" />
-        </div>
         <div className="flex-1 flex mr-5 justify-end md:hidden gap-1">
           {/* Instagram */}
           <a
