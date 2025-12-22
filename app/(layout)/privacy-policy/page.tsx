@@ -323,18 +323,28 @@ export default function PrivacyPolicy() {
               We may update this Policy periodically and will notify you of significant changes.
             </p>
           </div>
+        </section>
 
-          <div>
-            <h3 className="text-xl font-semibold mb-4">CONTACT US</h3>
-            <p className="mb-4">
-              If you have questions about this Privacy Policy, you may contact us:
-            </p>
-            <ul className="list-disc ml-6">
-              <li>By email: info@dsllimoservice.com</li>
-              <li>By website: https://dsllimoservice.com/contact-us/</li>
-              <li>By phone number: +1 800 679 3415</li>
-            </ul>
-          </div>
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">PAYMENT</h2>
+          <ul className="list-disc ml-6 space-y-2">
+            <li>If you cancel a ride, 5% of your payment will be deducted to cover transaction fees.</li>
+            <li>If you cancel the ride after 8 hours, 15% will be deducted from your payment.</li>
+            <li>Additional costs such as tolls or detours will be billed separately.</li>
+            <li>Tips are voluntary.</li>
+          </ul>
+        </section>
+
+        <section className="mb-8">
+          <h3 className="text-xl font-semibold mb-4">CONTACT US</h3>
+          <p className="mb-4">
+            If you have questions about this Privacy Policy, you may contact us:
+          </p>
+          <ul className="list-disc ml-6">
+            <li>By email: info@dsllimoservice.com</li>
+            <li>By website: https://dsllimoservice.com/contact-us/</li>
+            <li>By phone number: +1 800 679 3415</li>
+          </ul>
         </section>
       </div>
     </div>
