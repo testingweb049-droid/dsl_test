@@ -876,7 +876,11 @@ export default function PassengerDetailsForm({
                       setReturnDate(date ?? null);
                       setIsReturnCalendarOpen(false);
                     }}
-                    disabled={{ before: new Date(pickupDate) }} // Ensure pickupDate is a Date object
+                    disabled={{ before: (() => {
+                      // Parse date string in local timezone to avoid timezone shift
+                      const [year, month, day] = pickupDate.split("-").map(Number);
+                      return new Date(year, month - 1, day);
+                    })() }}
                   />
 
                 </PopoverContent>
