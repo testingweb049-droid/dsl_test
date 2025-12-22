@@ -47,6 +47,14 @@ export default function NewDateTimePicker({
 
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
+  // Helper function to parse date string in local timezone (fixes timezone issue)
+  const parseLocalDate = (dateString: string): Date => {
+    // Date string format: "yyyy-MM-dd"
+    const [year, month, day] = dateString.split("-").map(Number)
+    // Create date in local timezone (month is 0-indexed)
+    return new Date(year, month - 1, day)
+  }
+
   // Close pickers when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -245,7 +253,7 @@ export default function NewDateTimePicker({
               "pl-8 sm:pl-9"
             )}>
               {selectedDate
-                ? format(new Date(selectedDate), "dd MMM yyyy")
+                ? format(parseLocalDate(selectedDate), "dd MMM yyyy")
                 : "Select date"}
             </div>
           </div>
@@ -316,7 +324,7 @@ export default function NewDateTimePicker({
                         isBefore(date, startOfDay(new Date()))
 
                       const isSelected =
-                        selectedDate && isSameDay(date, new Date(selectedDate))
+                        selectedDate && isSameDay(date, parseLocalDate(selectedDate))
 
                       return (
                         <div
