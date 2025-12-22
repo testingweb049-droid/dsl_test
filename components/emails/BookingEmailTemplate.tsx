@@ -10,6 +10,7 @@ import {
   Heading,
 } from "@react-email/components";
 import { BookingData } from "@/app/actions/send-booking";
+import { formatNYDate, formatNYTime } from "@/lib/timezone";
 
 function formatCurrency(n?: number | null) {
   if (n === undefined || n === null) return "0.00";
@@ -122,8 +123,8 @@ export default function BookingEmail(props: BookingData ) {
                 {[
                   ["Pickup Location", from_location],
                   ["Dropoff Location", to_location],
-                  ["Pickup Date", pickup_date],
-                  ["Pickup Time", pickup_time || "N/A"],
+                  ["Pickup Date", pickup_date ? formatNYDate(pickup_date) : "N/A"],
+                  ["Pickup Time", pickup_time ? formatNYTime(pickup_time) : "N/A"],
                   ["Distance", `${distance ?? "N/A"} miles`],
                   ["Hours", category === "hourly" ? hours : "0"],
                   ["Trip Type", tripType],
@@ -165,8 +166,8 @@ export default function BookingEmail(props: BookingData ) {
 
                 {/* Return Info */}
                 {[
-                  ["Return Date", return_date || "No"],
-                  ["Return Time", return_time || "No"],
+                  ["Return Date", return_date ? formatNYDate(return_date) : "No"],
+                  ["Return Time", return_time ? formatNYTime(return_time) : "No"],
                   ["Rear Seats", rear_seats ?? 0],
                   ["Booster Seats", booster_seats ?? 0],
                   ["Infant Seat", infantSeat ?? "No"],

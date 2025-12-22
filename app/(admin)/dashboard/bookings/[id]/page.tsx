@@ -16,6 +16,7 @@ import { IoCarSportSharp } from "react-icons/io5";
 import { BiUserCircle } from "react-icons/bi";
 import { Timer, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { formatNYDate, formatNYTime } from "@/lib/timezone";
 
 export interface OrderProps {
   id: number;
@@ -96,12 +97,8 @@ export default function BookingDetailPage() {
           const orderData = result.order;
           const formattedOrder: OrderProps = {
             ...orderData,
-            pickup_date: orderData.pickup_date
-              ? new Date(orderData.pickup_date).toISOString()
-              : null,
-            return_date: orderData.return_date
-              ? new Date(orderData.return_date).toISOString()
-              : null,
+            // Keep pickup_date and return_date as-is (they're already in yyyy-MM-dd format)
+            // Only convert created_at to ISO string since it's a timestamp
             created_at: orderData.created_at
               ? new Date(orderData.created_at).toISOString()
               : new Date().toISOString(),
@@ -644,11 +641,8 @@ const PriceItem: React.FC<PriceItemProps> = ({
 function formatDate(date?: string | null): string {
   if (!date) return "N/A";
   try {
-    return new Date(date).toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    // Dates are stored in NY timezone format (yyyy-MM-dd), display as NY timezone
+    return formatNYDate(date);
   } catch {
     return "N/A";
   }
@@ -657,31 +651,8 @@ function formatDate(date?: string | null): string {
 function formatTime(time?: string | null): string {
   if (!time) return "N/A";
   try {
-    const [hours24, minutes] = time.split(":");
-    const hours24Int = parseInt(hours24);
-
-    if (isNaN(hours24Int) || isNaN(parseInt(minutes))) {
-      return time;
-    }
-
-    let hours12: number;
-    let period: string;
-
-    if (hours24Int === 0) {
-      hours12 = 12;
-      period = "AM";
-    } else if (hours24Int === 12) {
-      hours12 = 12;
-      period = "PM";
-    } else if (hours24Int > 12) {
-      hours12 = hours24Int - 12;
-      period = "PM";
-    } else {
-      hours12 = hours24Int;
-      period = "AM";
-    }
-
-    return `${hours12}:${minutes.padStart(2, "0")} ${period}`;
+    // Times are stored in NY timezone format (HH:mm), display as NY timezone
+    return formatNYTime(time);
   } catch {
     return time || "N/A";
   }

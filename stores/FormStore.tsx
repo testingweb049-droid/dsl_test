@@ -5,6 +5,7 @@ import { calculateDistance } from "@/app/actions/getDistance";
 import { SendBookingAction } from "@/app/actions/send-booking";
 import { hourlyInitialFormData, tripInitialFormData } from "@/constants/storeInitailObjects";
 import { create } from "zustand";
+import { convertToNYTimezone } from "@/lib/timezone";
 
   export interface FieldType<T> {
   value: T;
@@ -259,10 +260,31 @@ import { create } from "zustand";
     stops: Array.isArray(original.stops)
       ? (original.stops as string[])
       : [],
-    pickup_date: String(original.date ?? ""),
-    pickup_time: String(original.time ?? ""),
-    return_date: String(original.returnDate ?? ""),
-    return_time: String(original.returnTime ?? ""),
+    // Convert dates/times to NY timezone before storing
+    ...(original.date && original.time
+      ? (() => {
+          const pickup = convertToNYTimezone(String(original.date), String(original.time));
+          return {
+            pickup_date: pickup.date,
+            pickup_time: pickup.time,
+          };
+        })()
+      : {
+          pickup_date: String(original.date ?? ""),
+          pickup_time: String(original.time ?? ""),
+        }),
+    ...(original.returnDate && original.returnTime
+      ? (() => {
+          const returnDT = convertToNYTimezone(String(original.returnDate), String(original.returnTime));
+          return {
+            return_date: returnDT.date,
+            return_time: returnDT.time,
+          };
+        })()
+      : {
+          return_date: String(original.returnDate ?? ""),
+          return_time: String(original.returnTime ?? ""),
+        }),
 
     // 🔹 Passenger Info
     passengers: Number(original.passengers ?? 0),

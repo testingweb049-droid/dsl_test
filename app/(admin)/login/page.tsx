@@ -24,13 +24,10 @@ const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
-
 type LoginFormValues = z.infer<typeof loginSchema>;
-
 export default function AdminLoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -38,7 +35,6 @@ export default function AdminLoginPage() {
       password: "",
     },
   });
-
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
@@ -49,7 +45,12 @@ export default function AdminLoginPage() {
       });
 
       if (result?.error) {
-        toast.error("Invalid email or password");
+        console.error("Login error:", result.error);
+        if (result.error === "Configuration") {
+          toast.error("Server configuration error. Please contact support.");
+        } else {
+          toast.error("Invalid email or password");
+        }
       } else if (result?.ok) {
         toast.success("Login successful");
         router.push("/dashboard");
@@ -57,7 +58,9 @@ export default function AdminLoginPage() {
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("An error occurred during login");
+      const errorMessage =
+        error instanceof Error ? error.message : "An error occurred during login";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
