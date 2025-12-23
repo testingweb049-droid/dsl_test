@@ -7,10 +7,58 @@ import { Loader } from 'lucide-react'
 function PaymentSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { formData, setFormData, changeStep, formLoading, formError, changeCategory, bookingSent } = useFormStore()
+  const { formData, setFormData, changeStep, formLoading, formError, changeCategory, bookingSent, isOrderDone, id } = useFormStore()
   const [error, setError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(true)
   const hasProcessed = useRef(false)
+
+  // 🔹 Redirect if booking is already completed (handles case where booking was sent but page didn't redirect)
+  useEffect(() => {
+    if ((bookingSent || isOrderDone || id) && !isProcessing) {
+      console.log('Booking already completed, redirecting...', { bookingSent, isOrderDone, id })
+      setIsProcessing(false) // Ensure processing is set to false
+      const timer = setTimeout(() => {
+        try {
+          router.replace('/order-placed')
+          router.refresh()
+        } catch (e) {
+          console.error('Router redirect error:', e)
+          window.location.href = '/order-placed'
+        }
+        // Fallback redirect after 1 second
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && window.location.pathname.includes('payment-success')) {
+            console.log('Fallback redirect triggered')
+            window.location.href = '/order-placed'
+          }
+        }, 1000)
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [bookingSent, isOrderDone, id, isProcessing, router])
+
+  // 🔹 Safety timeout - if processing takes too long, check booking status and redirect
+  useEffect(() => {
+    if (isProcessing) {
+      const timeout = setTimeout(async () => {
+        console.log('Processing timeout reached, checking booking status...')
+        const store = useFormStore.getState()
+        if (store.bookingSent || store.isOrderDone || store.id) {
+          console.log('Booking found after timeout, redirecting...')
+          setIsProcessing(false)
+          try {
+            router.replace('/order-placed')
+            router.refresh()
+          } catch (e) {
+            window.location.href = '/order-placed'
+          }
+        } else {
+          console.warn('Still processing after 30 seconds, but no booking found')
+        }
+      }, 30000) // 30 second timeout
+      return () => clearTimeout(timeout)
+    }
+  }, [isProcessing, router])
 
   useEffect(() => {
     // Prevent multiple executions
@@ -176,9 +224,40 @@ function PaymentSuccessContent() {
         
         console.log('changeStep result:', isOk)
         
-        if (isOk) {
-          router.replace('/order-placed')
-          router.refresh()
+        // Wait a moment for state to update
+        await new Promise(resolve => setTimeout(resolve, 300))
+        
+        // Check if booking was sent successfully
+        const finalStore = useFormStore.getState()
+        const bookingWasSent = finalStore.bookingSent || finalStore.isOrderDone || finalStore.id
+        
+        if (isOk || bookingWasSent) {
+          console.log('Booking successful, redirecting to order page...', {
+            isOk,
+            bookingSent: finalStore.bookingSent,
+            isOrderDone: finalStore.isOrderDone,
+            orderId: finalStore.id
+          })
+          
+          // Set processing to false before redirect
+          setIsProcessing(false)
+          
+          // Use window.location as fallback if router doesn't work
+          try {
+            router.replace('/order-placed')
+            router.refresh()
+            
+            // Fallback: Force redirect after a short delay if router doesn't work
+            setTimeout(() => {
+              if (window.location.pathname.includes('payment-success')) {
+                console.log('Router redirect failed, using window.location fallback')
+                window.location.href = '/order-placed'
+              }
+            }, 1000)
+          } catch (redirectError) {
+            console.error('Error with router redirect:', redirectError)
+            window.location.href = '/order-placed'
+          }
         } else {
           // Wait a moment for formError to be set, then check it
           await new Promise(resolve => setTimeout(resolve, 200))
@@ -201,6 +280,7 @@ function PaymentSuccessContent() {
     processPayment()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
 
   if (isProcessing || formLoading) {
     return (
