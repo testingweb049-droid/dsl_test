@@ -22,12 +22,20 @@ function StripePaymentForm({price}:{price:string}) {
 
   const [error, setError] = useState<string>("")
   const [loading, setLoading] = useState(false)
-  const {formError, setFormData, changeStep, formData, formLoading } = useFormStore()
+  const {formError, setFormData, changeStep, formData, formLoading, bookingSent } = useFormStore()
 
   const amount = Number(price)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+
+    // 🔹 Prevent duplicate booking if already sent
+    if (bookingSent) {
+      console.log("⚠️ Booking already sent, redirecting to order page");
+      router.replace('/order-placed')
+      router.refresh()
+      return;
+    }
 
     if(formData.paymentId.value && !formLoading){
       const isOk = await changeStep(true,4)

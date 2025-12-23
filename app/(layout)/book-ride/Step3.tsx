@@ -71,7 +71,11 @@ console.log("formData.date.value !== '' ? false : true : ",formData.date.value !
         selectedTime={formData.returnTime.value}
         setFormData={setFormData}
         dateFieldName="returnDate"
-        minSelectableDate={new Date(formData.date.value )}
+        minSelectableDate={formData.date.value ? (() => {
+          // Parse date string in local timezone to avoid timezone shift
+          const [year, month, day] = formData.date.value.split("-").map(Number);
+          return new Date(year, month - 1, day);
+        })() : null}
         isDisable={formData.date.value === '' ? true : false}
         timeFieldName="returnTime" placeholder='Select Return Date & Time'/>
        </div>

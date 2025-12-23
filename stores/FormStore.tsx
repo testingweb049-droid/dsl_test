@@ -6,6 +6,7 @@ import { SendBookingAction } from "@/app/actions/send-booking";
 import { hourlyInitialFormData, tripInitialFormData } from "@/constants/storeInitailObjects";
 import { create } from "zustand";
 import { convertToNYTimezone } from "@/lib/timezone";
+import { hasAirportInLocations } from "@/lib/airportDetection";
 
   export interface FieldType<T> {
   value: T;
@@ -81,6 +82,7 @@ import { convertToNYTimezone } from "@/lib/timezone";
   orderId: string;
   isOrderDone: boolean;
   formLoading: boolean;
+  bookingSent: boolean;
   formData: FormDataType;
   setFormData: (
     key: keyof FormDataType | "stops",
@@ -120,27 +122,104 @@ import { convertToNYTimezone } from "@/lib/timezone";
   category: "trip",
   formError: "",
   formLoading: false,
+  bookingSent: false,
   formData: tripInitialFormData,
   isOrderDone: false,
   orderId:'',
   setFormData: (key, value, coardinates = "", index) => {
-    const {calculatePrices} = get()
+    const {calculatePrices, formData} = get()
     
     if (key === "stops" && typeof index === "number") {
       set((state) => {
         const stops = [...state.formData.stops];
         stops[index] = { ...stops[index], value: value as string, coardinates, error:'' };
-        return { formData: { ...state.formData, stops } };
+        
+        // 🔹 Check if any location contains an airport and auto-check isAirportPickup
+        const updatedStops = stops.map(s => s.value);
+        const hasAirport = hasAirportInLocations(
+          state.formData.fromLocation.value,
+          state.formData.toLocation.value,
+          updatedStops
+        );
+        
+        // Update isAirportPickup and flight field requirements
+        const updatedFormData = {
+          ...state.formData,
+          stops,
+          isAirportPickup: { ...state.formData.isAirportPickup, value: hasAirport }
+        };
+        
+        // Set flight fields as required when airport is detected
+        if (hasAirport) {
+          updatedFormData.flightName = { 
+            ...updatedFormData.flightName, 
+            required: true 
+          };
+          updatedFormData.flightNumber = { 
+            ...updatedFormData.flightNumber, 
+            required: true 
+          };
+        } else {
+          updatedFormData.flightName = { 
+            ...updatedFormData.flightName, 
+            required: false 
+          };
+          updatedFormData.flightNumber = { 
+            ...updatedFormData.flightNumber, 
+            required: false 
+          };
+        }
+        
+        return { formData: updatedFormData };
       });
       calculatePrices()
       return;
     }
-    set((state) => ({
-      formData: {
+    
+    set((state) => {
+      const updatedFormData = {
         ...state.formData,
         [key]: { ...state.formData[key as keyof FormDataType], value, coardinates, error:''  },
-      },
-    }));
+      };
+      
+      // 🔹 Check if any location contains an airport and auto-check isAirportPickup
+      // This applies when updating fromLocation, toLocation, or any other field
+      const fromLocation = key === "fromLocation" ? (value as string) : state.formData.fromLocation.value;
+      const toLocation = key === "toLocation" ? (value as string) : state.formData.toLocation.value;
+      const stops = state.formData.stops.map(s => s.value);
+      
+      const hasAirport = hasAirportInLocations(fromLocation, toLocation, stops);
+      
+      // 🔹 Auto-check/uncheck isAirportPickup based on airport detection
+      updatedFormData.isAirportPickup = { 
+        ...updatedFormData.isAirportPickup, 
+        value: hasAirport 
+      };
+      
+      // Also set flight fields as required when airport is detected
+      if (hasAirport) {
+        updatedFormData.flightName = { 
+          ...updatedFormData.flightName, 
+          required: true 
+        };
+        updatedFormData.flightNumber = { 
+          ...updatedFormData.flightNumber, 
+          required: true 
+        };
+      } else {
+        // Unset required when no airport is detected
+        updatedFormData.flightName = { 
+          ...updatedFormData.flightName, 
+          required: false 
+        };
+        updatedFormData.flightNumber = { 
+          ...updatedFormData.flightNumber, 
+          required: false 
+        };
+      }
+      
+      return { formData: updatedFormData };
+    });
      calculatePrices();
   },
   setFieldOptions: (key, required) => {
@@ -185,8 +264,15 @@ import { convertToNYTimezone } from "@/lib/timezone";
   },
 
   changeStep: async (isNext: boolean, _step:number) => {
-    const { formData, category, validateData, formLoading } = get();
+    const { formData, category, validateData, formLoading, bookingSent } = get();
     if(formLoading) return false;
+    
+    // 🔹 Prevent duplicate booking submissions
+    if (_step === 4 && isNext && bookingSent) {
+      console.log("⚠️ Booking already sent, skipping duplicate submission");
+      set((state) => ({ ...state, step: 1, isOrderDone: true }));
+      return true;
+    }
     if (!isNext) {
       set((state) => ({
         ...state,
@@ -352,6 +438,7 @@ import { convertToNYTimezone } from "@/lib/timezone";
       id:res.id,
       formError: "",
       formLoading: false,
+      bookingSent: true, // Mark booking as sent to prevent duplicates
     }));
 
   } catch (error) {
@@ -464,7 +551,7 @@ import { convertToNYTimezone } from "@/lib/timezone";
   });
 },
 
-  resetForm: () => set({ formData: tripInitialFormData, step: 1, category: "trip", formError: "", formLoading: false, isMobileDropdownOpen:false, isOrderDone:false, orderId:'' }),
+  resetForm: () => set({ formData: tripInitialFormData, step: 1, category: "trip", formError: "", formLoading: false, isMobileDropdownOpen:false, isOrderDone:false, orderId:'', bookingSent: false }),
   }));
 
 export default useFormStore;
