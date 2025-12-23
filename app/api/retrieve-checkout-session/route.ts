@@ -47,21 +47,59 @@ export async function GET(request: NextRequest) {
         // Single chunk
         try {
           formData = JSON.parse(session.metadata.formData)
+          console.log('✅ Form data retrieved from single metadata chunk')
         } catch (e) {
-          console.error('Error parsing formData from metadata:', e)
+          console.error('❌ Error parsing formData from metadata:', e)
         }
       } else if (session.metadata.formDataChunks) {
         // Multiple chunks - reconstruct
         const chunks = parseInt(session.metadata.formDataChunks)
         let formDataJson = ''
         for (let i = 0; i < chunks; i++) {
-          formDataJson += session.metadata[`formData_${i}`] || ''
+          const chunk = session.metadata[`formData_${i}`] || ''
+          formDataJson += chunk
         }
         try {
           formData = JSON.parse(formDataJson)
+          console.log(`✅ Form data retrieved from ${chunks} metadata chunks`)
         } catch (e) {
-          console.error('Error parsing formData from chunks:', e)
+          console.error('❌ Error parsing formData from chunks:', e, 'Chunks:', chunks, 'Length:', formDataJson.length)
         }
+      } else {
+        console.warn('⚠️ No formData found in session metadata. Available keys:', Object.keys(session.metadata))
+      }
+    } else {
+      console.warn('⚠️ No metadata found in session')
+    }
+
+    // 🔹 Fallback: Try to get form data from payment intent metadata if session metadata is empty
+    if (!formData && paymentIntentId) {
+      try {
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+        if (paymentIntent.metadata) {
+          if (paymentIntent.metadata.formData) {
+            try {
+              formData = JSON.parse(paymentIntent.metadata.formData)
+              console.log('✅ Form data retrieved from payment intent metadata (fallback)')
+            } catch (e) {
+              console.error('❌ Error parsing formData from payment intent metadata:', e)
+            }
+          } else if (paymentIntent.metadata.formDataChunks) {
+            const chunks = parseInt(paymentIntent.metadata.formDataChunks)
+            let formDataJson = ''
+            for (let i = 0; i < chunks; i++) {
+              formDataJson += paymentIntent.metadata[`formData_${i}`] || ''
+            }
+            try {
+              formData = JSON.parse(formDataJson)
+              console.log(`✅ Form data retrieved from payment intent metadata chunks (fallback)`)
+            } catch (e) {
+              console.error('❌ Error parsing formData from payment intent chunks:', e)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error retrieving payment intent for fallback:', error)
       }
     }
 
