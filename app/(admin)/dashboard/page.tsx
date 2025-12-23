@@ -14,7 +14,15 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
-import { Search, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Search, Eye, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -55,6 +63,16 @@ export default function AdminDashboard() {
     total: 0,
     totalPages: 0,
   });
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    bookingId: number | null;
+    bookingName: string | null;
+  }>({
+    open: false,
+    bookingId: null,
+    bookingName: null,
+  });
+  const [deleting, setDeleting] = useState(false);
 
   const fetchBookings = async () => {
     try {
@@ -105,6 +123,51 @@ export default function AdminDashboard() {
     if (!price) return "$0.00";
     const num = parseFloat(price);
     return isNaN(num) ? "$0.00" : `$${num.toFixed(2)}`;
+  };
+
+  const handleDeleteClick = (bookingId: number, bookingName: string) => {
+    setDeleteDialog({
+      open: true,
+      bookingId,
+      bookingName,
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteDialog.bookingId) return;
+
+    try {
+      setDeleting(true);
+      const response = await fetch("/api/admin/bookings", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: deleteDialog.bookingId }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to delete booking");
+      }
+
+      toast.success("Booking deleted successfully");
+      setDeleteDialog({ open: false, bookingId: null, bookingName: null });
+      
+      // Refresh bookings list
+      fetchBookings();
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete booking"
+      );
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialog({ open: false, bookingId: null, bookingName: null });
   };
 
   return (
@@ -202,11 +265,21 @@ export default function AdminDashboard() {
                         {formatPrice(booking.total_price)}
                       </TableCell>
                       <TableCell>
-                        <Link href={`/dashboard/bookings/${booking.id}`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Eye className="h-4 w-4" />
+                        <div className="flex items-center gap-2">
+                          <Link href={`/dashboard/bookings/${booking.id}`}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleDeleteClick(booking.id, booking.name)}
+                          >
+                            <Trash2 className="h-4 w-4" />
                           </Button>
-                        </Link>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -249,6 +322,40 @@ export default function AdminDashboard() {
           </>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialog.open} onOpenChange={(open) => {
+        if (!open) handleDeleteCancel();
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Delete Booking</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete the booking for{" "}
+              <span className="font-semibold text-gray-900">
+                {deleteDialog.bookingName}
+              </span>
+              ? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleDeleteCancel}
+              disabled={deleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete Booking"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
