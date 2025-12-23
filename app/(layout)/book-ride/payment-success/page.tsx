@@ -2,7 +2,7 @@
 import useFormStore from '@/stores/FormStore'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState, useRef, Suspense } from 'react'
-import { Loader } from 'lucide-react'
+import { Loader, CheckCircle2 } from 'lucide-react'
 
 function PaymentSuccessContent() {
   const router = useRouter()
@@ -10,65 +10,38 @@ function PaymentSuccessContent() {
   const { formData, setFormData, changeStep, formLoading, formError, changeCategory, bookingSent, isOrderDone, id } = useFormStore()
   const [error, setError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(true)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [countdown, setCountdown] = useState(10)
   const hasProcessed = useRef(false)
 
-  // 🔹 Redirect if booking is already completed (handles case where booking was sent but page didn't redirect)
+  // 🔹 Countdown timer for redirect to home page
   useEffect(() => {
-    if ((bookingSent || isOrderDone || id) && !isProcessing) {
-      console.log('Booking already completed, redirecting...', { bookingSent, isOrderDone, id })
-      setIsProcessing(false) // Ensure processing is set to false
-      const timer = setTimeout(() => {
-        try {
-          router.replace('/order-placed')
-          router.refresh()
-        } catch (e) {
-          console.error('Router redirect error:', e)
-          window.location.href = '/order-placed'
-        }
-        // Fallback redirect after 1 second
-        setTimeout(() => {
-          if (typeof window !== 'undefined' && window.location.pathname.includes('payment-success')) {
-            console.log('Fallback redirect triggered')
-            window.location.href = '/order-placed'
+    if (isSuccess && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            router.push('/')
+            return 0
           }
-        }, 1000)
-      }, 100)
-      return () => clearTimeout(timer)
+          return prev - 1
+        })
+      }, 1000)
+      return () => clearInterval(timer)
+    } else if (isSuccess && countdown === 0) {
+      router.push('/')
     }
-  }, [bookingSent, isOrderDone, id, isProcessing, router])
-
-  // 🔹 Safety timeout - if processing takes too long, check booking status and redirect
-  useEffect(() => {
-    if (isProcessing) {
-      const timeout = setTimeout(async () => {
-        console.log('Processing timeout reached, checking booking status...')
-        const store = useFormStore.getState()
-        if (store.bookingSent || store.isOrderDone || store.id) {
-          console.log('Booking found after timeout, redirecting...')
-          setIsProcessing(false)
-          try {
-            router.replace('/order-placed')
-            router.refresh()
-          } catch (e) {
-            window.location.href = '/order-placed'
-          }
-        } else {
-          console.warn('Still processing after 30 seconds, but no booking found')
-        }
-      }, 30000) // 30 second timeout
-      return () => clearTimeout(timeout)
-    }
-  }, [isProcessing, router])
+  }, [isSuccess, countdown, router])
 
   useEffect(() => {
     // Prevent multiple executions
     if (hasProcessed.current) return
     
-    // 🔹 Check if booking was already sent
-    if (bookingSent) {
-      console.log("⚠️ Booking already sent, redirecting to order page");
-      router.replace('/order-placed')
-      router.refresh()
+    // 🔹 Check if booking was already sent - show success page
+    if (bookingSent || isOrderDone || id) {
+      console.log("⚠️ Booking already sent, showing success page");
+      setIsProcessing(false)
+      setIsSuccess(true)
       return
     }
     
@@ -211,10 +184,10 @@ function PaymentSuccessContent() {
 
         // 🔹 Double-check bookingSent flag before proceeding
         const currentStore = useFormStore.getState()
-        if (currentStore.bookingSent) {
-          console.log("⚠️ Booking already sent, redirecting to order page");
-          router.replace('/order-placed')
-          router.refresh()
+        if (currentStore.bookingSent || currentStore.isOrderDone || currentStore.id) {
+          console.log("⚠️ Booking already sent, showing success page");
+          setIsProcessing(false)
+          setIsSuccess(true)
           return
         }
 
@@ -232,32 +205,16 @@ function PaymentSuccessContent() {
         const bookingWasSent = finalStore.bookingSent || finalStore.isOrderDone || finalStore.id
         
         if (isOk || bookingWasSent) {
-          console.log('Booking successful, redirecting to order page...', {
+          console.log('Booking successful!', {
             isOk,
             bookingSent: finalStore.bookingSent,
             isOrderDone: finalStore.isOrderDone,
             orderId: finalStore.id
           })
           
-          // Set processing to false before redirect
+          // Show success page instead of redirecting immediately
           setIsProcessing(false)
-          
-          // Use window.location as fallback if router doesn't work
-          try {
-            router.replace('/order-placed')
-            router.refresh()
-            
-            // Fallback: Force redirect after a short delay if router doesn't work
-            setTimeout(() => {
-              if (window.location.pathname.includes('payment-success')) {
-                console.log('Router redirect failed, using window.location fallback')
-                window.location.href = '/order-placed'
-              }
-            }, 1000)
-          } catch (redirectError) {
-            console.error('Error with router redirect:', redirectError)
-            window.location.href = '/order-placed'
-          }
+          setIsSuccess(true)
         } else {
           // Wait a moment for formError to be set, then check it
           await new Promise(resolve => setTimeout(resolve, 200))
@@ -305,6 +262,31 @@ function PaymentSuccessContent() {
             className='mt-4 px-6 py-2 bg-brand text-black font-semibold rounded-lg hover:bg-[#0294a4] transition-colors'
           >
             Go Back to Payment
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Success page with countdown
+  if (isSuccess) {
+    return (
+      <div className='w-full bg-slate-50 flex flex-col min-h-[50vh] items-center justify-center py-16 px-4'>
+        <div className='flex flex-col items-center gap-6 max-w-md text-center'>
+          <CheckCircle2 className="text-green-500" size={64} />
+          <div className='text-green-600 text-2xl font-semibold'>Payment Successful!</div>
+          <div className='text-gray-800 text-lg font-medium'>Your booking has been confirmed</div>
+          <div className='text-gray-600'>
+            We&apos;ve sent a confirmation email to {formData.email.value || 'your email'}
+          </div>
+          <div className='text-gray-600 text-sm mt-4'>
+            Redirecting to home page in <span className='font-bold text-brand text-lg'>{countdown}</span> {countdown === 1 ? 'second' : 'seconds'}...
+          </div>
+          <button
+            onClick={() => router.push('/')}
+            className='mt-4 px-6 py-2 bg-brand text-black font-semibold rounded-lg hover:bg-[#0294a4] transition-colors'
+          >
+            Go to Home Page Now
           </button>
         </div>
       </div>
