@@ -52,10 +52,10 @@ function PaymentSuccessContent() {
 
         // Restore form data from Stripe metadata if available
         if (data.formData) {
-          console.log('Restoring form data from Stripe metadata...')
+          console.log('Restoring form data from Stripe metadata...', data.formData)
           const restoredData = data.formData
           
-          // Restore all form fields
+          // Restore all form fields - batch updates
           if (restoredData.name) setFormData('name', restoredData.name)
           if (restoredData.email) setFormData('email', restoredData.email)
           if (restoredData.phone) setFormData('phone', restoredData.phone)
@@ -114,28 +114,46 @@ function PaymentSuccessContent() {
           }
           
           console.log('Form data restored from metadata')
+        } else {
+          console.warn('⚠️ No form data found in Stripe metadata')
         }
 
         // Store payment ID in form data
         setFormData('paymentId', data.paymentIntentId)
         console.log('Payment ID set:', data.paymentIntentId)
 
-        // Wait a bit to ensure state is updated, then get fresh state
-        await new Promise(resolve => setTimeout(resolve, 300))
+        // Wait for state updates to complete - increased wait time
+        await new Promise(resolve => setTimeout(resolve, 800))
         
-        // Get fresh formData from store
-        const store = useFormStore.getState()
-        const currentFormData = store.formData
+        // Get fresh formData from store with retries
+        let store = useFormStore.getState()
+        let currentFormData = store.formData
+        let attempts = 0
+        const maxAttempts = 3
+        
+        // Retry if required fields are missing
+        while (attempts < maxAttempts && (!currentFormData.name.value || !currentFormData.email.value || !currentFormData.car.value)) {
+          attempts++
+          console.log(`Waiting for form data to be restored... attempt ${attempts}/${maxAttempts}`)
+          await new Promise(resolve => setTimeout(resolve, 300))
+          store = useFormStore.getState()
+          currentFormData = store.formData
+        }
 
         // Verify required form data is present
         if (!currentFormData.name.value || !currentFormData.email.value || !currentFormData.car.value) {
-          console.error('Missing required form data:', {
+          console.error('Missing required form data after restoration:', {
             name: currentFormData.name.value,
             email: currentFormData.email.value,
             car: currentFormData.car.value,
             paymentId: currentFormData.paymentId.value,
-            hasFormDataFromMetadata: !!data.formData
+            hasFormDataFromMetadata: !!data.formData,
+            formDataKeys: data.formData ? Object.keys(data.formData) : [],
+            restoredName: data.formData?.name,
+            restoredEmail: data.formData?.email,
+            restoredCar: data.formData?.car
           })
+          
           setError('Missing required booking information. Your payment was successful, but we need your booking details. Please contact support with your payment ID: ' + data.paymentIntentId)
           setIsProcessing(false)
           return
