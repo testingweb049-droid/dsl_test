@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { bookings } from "@/db/schema";
 import { BookingData } from "@/app/actions/send-booking";
 import { NewBookingEmailTemplate } from "@/components/emails/NewBookingEmailTemplate";
+import { eq } from "drizzle-orm";
 
 
 const emailConfig = {
@@ -24,6 +25,25 @@ const emailConfig = {
 
 export async function sendBookingEmail(booking: BookingData) {
   try {
+    // 🔹 Check if booking already exists for this payment_id to prevent duplicates
+    if (booking.payment_id) {
+      const existingBooking = await db
+        .select()
+        .from(bookings)
+        .where(eq(bookings.payment_id, booking.payment_id))
+        .limit(1);
+
+      if (existingBooking.length > 0) {
+        console.log("⚠️ Booking already exists for payment_id:", booking.payment_id);
+        // Return existing booking ID without sending email again
+        return {
+          success: true,
+          message: "Booking already exists.",
+          id: existingBooking[0].id?.toString(),
+        };
+      }
+    }
+
     let stopsForDb = booking.stops ?? [];
 
     const insertResult = await db.insert(bookings).values({

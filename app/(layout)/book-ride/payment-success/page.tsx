@@ -7,7 +7,7 @@ import { Loader } from 'lucide-react'
 function PaymentSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { formData, setFormData, changeStep, formLoading, formError, changeCategory } = useFormStore()
+  const { formData, setFormData, changeStep, formLoading, formError, changeCategory, bookingSent } = useFormStore()
   const [error, setError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(true)
   const hasProcessed = useRef(false)
@@ -15,6 +15,15 @@ function PaymentSuccessContent() {
   useEffect(() => {
     // Prevent multiple executions
     if (hasProcessed.current) return
+    
+    // 🔹 Check if booking was already sent
+    if (bookingSent) {
+      console.log("⚠️ Booking already sent, redirecting to order page");
+      router.replace('/order-placed')
+      router.refresh()
+      return
+    }
+    
     hasProcessed.current = true
 
     const processPayment = async () => {
@@ -133,6 +142,15 @@ function PaymentSuccessContent() {
         }
 
         console.log('Form data verified. Proceeding with booking...')
+
+        // 🔹 Double-check bookingSent flag before proceeding
+        const currentStore = useFormStore.getState()
+        if (currentStore.bookingSent) {
+          console.log("⚠️ Booking already sent, redirecting to order page");
+          router.replace('/order-placed')
+          router.refresh()
+          return
+        }
 
         // Complete the booking by calling changeStep
         console.log('Calling changeStep to complete booking...')
