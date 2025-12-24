@@ -64,7 +64,11 @@ const asDirectedFAQData = [
 export default function AsDirectedService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="As Directed Chauffeur Service in New York" 
+        image="/hero-main-image.jpg"
+        imageAlt="As directed chauffeur service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="As Directed Chauffeur Service in New York"
@@ -75,7 +79,7 @@ export default function AsDirectedService() {
         title="Your Schedule, Your Rules"
         description="With As Directed transportation, you are not hiring a ride; you are hiring a dedicated vehicle and driver for as long as you need. Whether you need to visit multiple locations, extend a meeting, or make an unscheduled stop, your driver is at your service."
         benefits={asDirectedBenefits}
-        image="/why-choose-us.png"
+        image="/why-choose-images/as-direct.png"
         imageAlt="Professional chauffeur service"
       />
       <UseCasesSection

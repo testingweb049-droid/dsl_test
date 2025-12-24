@@ -107,7 +107,11 @@ const jfkFAQData = [
 export default function JFKAirportService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="Premium JFK Airport Car Service & Luxury Transfers" 
+        image="/hero-main-image.jpg"
+        imageAlt="JFK Airport car service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Premium JFK Airport Car Service & Luxury Transfers"
@@ -118,7 +122,7 @@ export default function JFKAirportService() {
         title="The Best Way to Travel from JFK to Manhattan"
         description="Traveling between JFK and New York City can be challenging, especially during peak hours. Our JFK car service eliminates the stress by monitoring real-time traffic patterns along the Van Wyck Expressway and through the Queens Midtown Tunnel, ensuring you reach your destination efficiently without delay."
         benefits={whyChooseJFKBenefits}
-        image="/why-choose-us.png"
+        image="/why-choose-images/jfk-airport.jpg"
         imageAlt="Professional JFK airport transfer service"
       />
       <CounterSection

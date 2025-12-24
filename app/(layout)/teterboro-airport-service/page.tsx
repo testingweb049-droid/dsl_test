@@ -37,27 +37,27 @@ const whyChooseTeterboroBenefits = [
 const teterboroFBOs = [
   {
     name: "SHELTAIR AVIATION",
-    image: "/image---.JPG",
+    image: "/airport-images/sheltair.png",
     href: "#",
   },
   {
     name: "SIGNATURE FLIGHT SUPPORT",
-    image: "/image---.JPG",
+    image: "/airport-images/Signature.png",
     href: "#",
   },
   {
     name: "JET AVIATION",
-    image: "/image---.JPG",
+    image: "/airport-images/jet-aviation.png",
     href: "#",
   },
   {
     name: "MERIDIAN TETERBORO",
-    image: "/image---.JPG",
+    image: "/airport-images/Meridian.jpg",
     href: "#",
   },
   {
     name: "ATLANTIC AVIATION",
-    image: "/image---.JPG",
+    image: "/airport-images/teterboro.jpg",
     href: "#",
   },
 ];
@@ -99,7 +99,11 @@ const teterboroFAQData = [
 export default function TeterboroAirportService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="Elite Teterboro Airport Car Service (TEB)" 
+        image="/hero-main-image.jpg"
+        imageAlt="Teterboro Airport car service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Elite Teterboro Airport Car Service (TEB)"
@@ -110,7 +114,7 @@ export default function TeterboroAirportService() {
         title="The Premier Choice for Private Aviation"
         description="Teterboro is the gateway to New York City for the elite. We understand the unique protocols of private air travel. Our chauffeurs are vetted, discreet, and experienced in tarmac operations."
         benefits={whyChooseTeterboroBenefits}
-        image="/why-choose-us.png"
+        image="/why-choose-images/teterboro-airport.png"
         imageAlt="Professional Teterboro airport transfer service"
       />
       <CounterSection

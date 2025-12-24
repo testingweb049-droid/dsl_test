@@ -86,6 +86,14 @@ const airportProcessSteps = [
   },
 ];
 
+const airportImages = [
+  { name: "JOHN F. KENNEDY AIRPORT (JFK)", image: "/airport-images/jfk.png", href: "/jfk-airport-service" },
+  { name: "LAGUARDIA AIRPORT (LGA)", image: "/airport-images/lga.png", href: "/laguardia-airport-service" },
+  { name: "NEWARK LIBERTY AIRPORT (EWR)", image: "/airport-images/ewr.jpg", href: "/newark-airport-service" },
+  { name: "TETERBORO AIRPORT (TEB)", image: "/airport-images/teterboro.jpg", href: "/teterboro-airport-service" },
+  { name: "WESTCHESTER COUNTY (HPN)", image: "/airport-images/westchester.png", href: "/westchester-airport-service" },
+];
+
 const airportAdditionalFAQData = [
   {
     question: "Do you offer Meet and Greet services inside the airport?",
@@ -112,7 +120,11 @@ const airportAdditionalFAQData = [
 export default function AirportTransferService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="Premier Airport Car Service in New York City" 
+        image="/hero-main-image.jpg"
+        imageAlt="Airport transfer service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Premier Airport Car Service in New York City"
@@ -121,12 +133,15 @@ export default function AirportTransferService() {
         explanationText="Navigating New York traffic is stressful; your ride to the airport shouldn't be. Unlike rideshare apps, our executive chauffeur service offers guaranteed pricing and professional drivers who know the fastest routes."
         features={airportFeatures}
       />
-      <AirportsWeServe />
+      <AirportsWeServe 
+        description="We provide dedicated luxury car service to all major airports in the New York metropolitan area. Click below to view details for your specific terminal."
+        airports={airportImages}
+      />
       <WhyChooseUsSection
         title="Why Choose Our Private Airport Transfer?"
         description="Navigating New York traffic is stressful; your ride to the airport shouldn't be. Unlike rideshare apps, our executive chauffeur service offers guaranteed pricing and professional drivers who know the fastest routes."
         benefits={whyChooseAirportBenefits}
-        image="/why-choose-us.png"
+        image="/why-choose-images/airpot-main-page.png"
         imageAlt="Professional airport transfer service"
       />
       <TriStateAreaSection states={triStateData} />

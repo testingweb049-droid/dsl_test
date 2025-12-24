@@ -12,22 +12,22 @@ import { ShieldCheck, Clock, Car, DollarSign, Shield } from "lucide-react";
 const occasions = [
   { 
     name: "BUSINESS MEETINGS", 
-    image: "/image---.JPG", 
+    image: "/airport-images/bussiness-meetings.png", 
     href: "#" 
   },
   { 
     name: "DINNER & EVENTS", 
-    image: "/image---.JPG", 
+    image: "/airport-images/dinner-and-event.png", 
     href: "#" 
   },
   { 
     name: "CITY-TO-CITY TRANSFERS", 
-    image: "/image---.JPG", 
+    image: "/airport-images/city-to-city.png", 
     href: "#" 
   },
   { 
     name: "MEDICAL APPOINTMENTS", 
-    image: "/image---.JPG", 
+    image: "/airport-images/Medical-Appointments.jpg", 
     href: "#" 
   },
 ];
@@ -90,7 +90,11 @@ const faqData = [
 export default function PointToPointCarService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="Premium Point-to-Point Car Service in NYC" 
+        image="/hero-main-image.jpg"
+        imageAlt="Point-to-point car service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Premium Point-to-Point Car Service in NYC"
@@ -109,7 +113,7 @@ export default function PointToPointCarService() {
         title="Why Choose DSL Limo Over Rideshare?"
         description="Pre-book your private transfer for guaranteed availability, professional vetted drivers, and luxury fleet options. No surge pricing, no guessing."
         benefits={whyChooseBenefits}
-        image="/why-choose-us.png"
+        image="/why-choose-images/point-to-point.png"
         imageAlt="Professional chauffeur opening car door"
       />
       <CounterSection
