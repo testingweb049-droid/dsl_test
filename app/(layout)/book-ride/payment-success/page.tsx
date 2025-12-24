@@ -140,9 +140,34 @@ function PaymentSuccessContent() {
           console.log('Restoring form data from Stripe metadata...', data.formData)
           const restoredData = data.formData
           
-          // Restore all form fields - batch updates
-          if (restoredData.name) setFormData('name', restoredData.name)
-          if (restoredData.email) setFormData('email', restoredData.email)
+          // 🔹 CRITICAL: Set category FIRST before restoring other fields
+          // This ensures the form store is in the correct state (hourly vs trip)
+          if (restoredData.category && changeCategory) {
+            console.log('Setting category first:', restoredData.category)
+            changeCategory(restoredData.category as "trip" | "hourly")
+            // Wait for category change to complete
+            await new Promise(resolve => setTimeout(resolve, 200))
+          }
+          
+          // Restore all form fields - batch updates with proper sequencing
+          // Restore critical fields first
+          if (restoredData.name) {
+            setFormData('name', restoredData.name)
+            console.log('Restored name:', restoredData.name)
+          }
+          if (restoredData.email) {
+            setFormData('email', restoredData.email)
+            console.log('Restored email:', restoredData.email)
+          }
+          if (restoredData.car) {
+            setFormData('car', restoredData.car)
+            console.log('Restored car:', restoredData.car)
+          }
+          
+          // Wait a bit for critical fields to be set
+          await new Promise(resolve => setTimeout(resolve, 200))
+          
+          // Restore other fields
           if (restoredData.phone) setFormData('phone', restoredData.phone)
           if (restoredData.fromLocation) setFormData('fromLocation', restoredData.fromLocation)
           if (restoredData.toLocation) setFormData('toLocation', restoredData.toLocation)
@@ -154,7 +179,6 @@ function PaymentSuccessContent() {
           if (restoredData.bags) setFormData('bags', restoredData.bags)
           if (restoredData.flightName) setFormData('flightName', restoredData.flightName)
           if (restoredData.flightNumber) setFormData('flightNumber', restoredData.flightNumber)
-          if (restoredData.car) setFormData('car', restoredData.car)
           if (restoredData.rearSeat !== undefined) setFormData('rearSeat', restoredData.rearSeat)
           if (restoredData.boosterSeat !== undefined) setFormData('boosterSeat', restoredData.boosterSeat)
           if (restoredData.infantSeat !== undefined) setFormData('infantSeat', restoredData.infantSeat)
@@ -183,11 +207,6 @@ function PaymentSuccessContent() {
           if (restoredData.totalPrice !== undefined) setFormData('totalPrice', restoredData.totalPrice)
           if (restoredData.distance !== undefined) setFormData('distance', restoredData.distance)
           if (restoredData.duration) setFormData('duration', restoredData.duration)
-          
-          // Restore category if available
-          if (restoredData.category && changeCategory) {
-            changeCategory(restoredData.category as "trip" | "hourly")
-          }
           
           // Restore stops
           if (Array.isArray(restoredData.stops)) {

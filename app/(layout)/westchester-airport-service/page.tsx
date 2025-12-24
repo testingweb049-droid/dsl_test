@@ -65,7 +65,11 @@ const westchesterFAQData = [
 export default function WestchesterAirportService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="Premium Westchester County Airport Car Service" 
+        image="/hero-main-image.jpg"
+        imageAlt="Westchester Airport car service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Premium Westchester County Airport Car Service"
