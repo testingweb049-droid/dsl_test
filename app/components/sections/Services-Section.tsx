@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 
 export default function ServicesSection() {
@@ -8,24 +9,28 @@ export default function ServicesSection() {
       description:
         "Enjoy direct, reliable rides from one location to another without delays.",
       image: "/point-to-point-service.jpg",
+      link: "/point-to-point-car-service",
     },
     {
       title: "HOURLY HIRE",
       description:
         "Hire a professional driver and vehicle by the hour to match your schedule.",
       image: "/hourly-hire-service.jpg",
+      link: "/hourly-hire-service",
     },
     {
       title: "AIRPORT TRANSFERS",
       description:
         "Start or end your trip with our dependable airport transfer service.",
       image: "/airport-transfer.jpg",
+      link: "/airport-transfer-service",
     },
     {
       title: "AS DIRECTED",
       description:
         "With our \"As Directed\" service, your journey is designed entirely around your schedule.",
       image: "/as-dected.jpg",
+      link: "/as-directed-service",
     },
   ]
 
@@ -46,10 +51,9 @@ export default function ServicesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => {
-            return (
+            const CardContent = (
               <div 
-                key={index} 
-                className="relative rounded-lg overflow-hidden aspect-[4/5] group cursor-pointer"
+                className="relative rounded-lg overflow-hidden aspect-[4/5] group cursor-pointer hover:scale-105 transition-transform duration-300"
               >
                 <Image
                   src={service.image}
@@ -70,6 +74,12 @@ export default function ServicesSection() {
                   </p>
                 </div>
               </div>
+            );
+
+            return (
+              <Link key={index} href={service.link}>
+                {CardContent}
+              </Link>
             );
           })}
         </div>

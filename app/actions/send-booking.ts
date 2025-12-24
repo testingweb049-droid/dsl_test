@@ -46,6 +46,7 @@ export interface BookingData {
   tax?: string;
   discount?: string;
   isMeetGreetPrice?: string;
+  isAirportPickupPrice?: string;
   rearSeatPrice?: string;
   infantSeatPrice?: string;
   boosterSeatPrice?: string;
