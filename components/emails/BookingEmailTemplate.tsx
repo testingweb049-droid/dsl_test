@@ -47,6 +47,7 @@ export default function BookingEmail(props: BookingData ) {
     discount,
     totalPrice,
     isMeetGreetPrice,
+    isAirportPickupPrice,
     rearSeatPrice,
     infantSeatPrice,
     boosterSeatPrice,
@@ -213,6 +214,10 @@ export default function BookingEmail(props: BookingData ) {
                 {[
                   ["Base Price", formatCurrency(Number(base_price))],
                   [
+                    "Airport Pickup",
+                    formatCurrency(Number(isAirportPickupPrice || 0))
+                  ],
+                  [
                     "Meet and Greet",
                     formatCurrency(Number(isMeetGreetPrice)
                     ),
@@ -242,9 +247,17 @@ export default function BookingEmail(props: BookingData ) {
                   ["Discount", `-${formatCurrency(Number(discount))}`],
                   
                  
-                ].filter(([label]) => {
+                ].filter(([label, value]) => {
+                    // Show all items if return trip exists, otherwise hide return items
                     if(Number(returnPrice) > 0){return true};
-                    return !String(label).startsWith('Return')
+                    // Hide return items if no return trip
+                    if(String(label).startsWith('Return')){return false};
+                    // Hide airport pickup if price is 0
+                    if(label === 'Airport Pickup' && Number(value) === 0){return false};
+                    // Always show base price, gratuity, tax, discount
+                    if(['Base Price', 'Gratuity 20%', 'Tax 5%', 'Discount'].includes(String(label))){return true};
+                    // Hide other items with 0 value
+                    return Number(value) > 0;
                 }).map(([label, value], i) => (
                   <tr
                     key={label}

@@ -26,6 +26,7 @@ export default function SelectableCheckbox({
     if(fieldName==='isAirportPickup'){
       setFieldOptions('flightName',checked)
       setFieldOptions('flightNumber',checked)
+      // Price will be recalculated automatically via setFormData -> calculatePrices
     }
   }
 

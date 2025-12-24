@@ -54,6 +54,7 @@ export interface OrderProps {
   tax: string | null;
   discount: string | null;
   is_meet_greet_price: string | null;
+  is_airport_pickup_price: string | null;
   rear_seat_price: string | null;
   infant_seat_price: string | null;
   booster_seat_price: string | null;
@@ -430,6 +431,13 @@ export default function BookingDetailPage() {
 
           {order.gratuity && parseFloat(order.gratuity) > 0 && (
             <PriceItem label="Gratuity" value={formatPrice(order.gratuity)} />
+          )}
+
+          {order.is_airport_pickup_price && parseFloat(order.is_airport_pickup_price) > 0 && (
+            <PriceItem
+              label="Airport Pickup"
+              value={formatPrice(order.is_airport_pickup_price)}
+            />
           )}
 
           {order.is_meet_greet_price && parseFloat(order.is_meet_greet_price) > 0 && (

@@ -22,6 +22,13 @@
       "when": 1765398217166,
       "tag": "0002_nappy_george_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1766591549469,
+      "tag": "0003_round_hawkeye",
+      "breakpoints": true
     }
   ]
 }
