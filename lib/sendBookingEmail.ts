@@ -80,6 +80,7 @@ export async function sendBookingEmail(booking: BookingData) {
       tax: String(booking.tax),
       discount: String(booking.discount),
       is_meet_greet_price: String(booking.isMeetGreetPrice),
+      is_airport_pickup_price: String(booking.isAirportPickupPrice || "0"),
       rear_seat_price: String(booking.rearSeatPrice),
       infant_seat_price: String(booking.infantSeatPrice),
       booster_seat_price: String(booking.boosterSeatPrice),

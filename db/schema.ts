@@ -61,6 +61,7 @@ export const bookings = pgTable("dsl_booking", {
   tax: numeric("tax", { precision: 10, scale: 2 }),
   discount: numeric("discount", { precision: 10, scale: 2 }),
   is_meet_greet_price: numeric("is_meet_greet_price", { precision: 10, scale: 2 }),
+  is_airport_pickup_price: numeric("is_airport_pickup_price", { precision: 10, scale: 2 }),
   rear_seat_price: numeric("rear_seat_price", { precision: 10, scale: 2 }),
   infant_seat_price: numeric("infant_seat_price", { precision: 10, scale: 2 }),
   booster_seat_price: numeric("booster_seat_price", { precision: 10, scale: 2 }),

@@ -83,7 +83,7 @@ console.log("formData.date.value !== '' ? false : true : ",formData.date.value !
          
 
        <div className="w-full">
-       <SelectableCheckbox fieldName='isAirportPickup' label='Airport Pickup Details' />
+       <SelectableCheckbox fieldName='isAirportPickup' label='Airport Pickup Details' subLabel='$ 5' />
 
       <div className="w-full overflow-hidden transition-all duration-500"
        style={{ maxHeight: formData.isAirportPickup.value ? '200px' : '0' }}>

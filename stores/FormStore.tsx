@@ -405,6 +405,7 @@ import { hasAirportInLocations } from "@/lib/airportDetection";
     tax: String(original.tax ?? "0"),
     discount: String(original.discount ?? "0"),
     isMeetGreetPrice: String(original.isMeetGreetPrice ?? "0"),
+    isAirportPickupPrice: String(original.isAirportPickupPrice ?? "0"),
     rearSeatPrice: String(original.rearSeatPrice ?? "0"),
     infantSeatPrice: String(original.infantSeatPrice ?? "0"),
     boosterSeatPrice: String(original.boosterSeatPrice ?? "0"),

@@ -5,7 +5,7 @@ import OurFleet from "../components/sections/OurfleetSection";
 import BestExperienceBanner from "../components/sections/BestExperienceBanner";
 import ServicesSection from "../components/sections/Services-Section";
 import ReviewsSection from "../components/sections/ReviewsSection";
-import WhyChooseUsSection from "../components/sections/WhyChooseUsSection";
+import WhyChooseUsSectionHome from "../components/sections/WhyChooseUsSectionHome";
 import NewHeroSection from "./book-ride/NewHeroSection";
 import InfiniteSlide from "./book-ride/InfiniteSlide";
 
@@ -16,7 +16,7 @@ export default function Home() {
      <InfiniteSlide/>
      <AirportsWeServe/>
      <OurFleet/>
-     <WhyChooseUsSection/>
+      <WhyChooseUsSectionHome/>
      <BestExperienceBanner/>
      <ServicesSection/>
      <ReviewsSection/>

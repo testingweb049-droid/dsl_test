@@ -1,0 +1,1 @@
+ALTER TABLE "dsl_booking" ADD COLUMN "is_airport_pickup_price" numeric(10, 2);
