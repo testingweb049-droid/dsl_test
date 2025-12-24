@@ -65,7 +65,11 @@ const hourlyFAQData = [
 export default function HourlyHireService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="Luxury Hourly Limo Service in NYC" 
+        image="/hero-main-image.jpg"
+        imageAlt="Hourly hire limo service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Luxury Hourly Limo Service in NYC"
@@ -84,7 +88,7 @@ export default function HourlyHireService() {
           </>
         }
         benefits={whyChooseHourlyBenefits}
-        image="/why-choose-us.png"
+        image="/why-choose-images/hourly-hire.png"
         imageAlt="Professional chauffeur opening car door"
       />
       <UseCasesSection

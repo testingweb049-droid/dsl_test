@@ -80,7 +80,11 @@ const newarkFAQData = [
 export default function NewarkAirportService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="Professional Newark Airport Car Service (EWR)" 
+        image="/hero-main-image.jpg"
+        imageAlt="Newark Airport car service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Professional Newark Airport Car Service (EWR)"
@@ -93,7 +97,7 @@ export default function NewarkAirportService() {
         title="Why Choose Our Newark Airport Transfer?"
         description="Navigating Newark Airport and the journey to New York City can be challenging, especially during peak hours. Our EWR car service eliminates the stress by monitoring real-time traffic patterns and choosing the most efficient routes."
         benefits={whyChooseNewarkBenefits}
-        image="/why-choose-us.png"
+        image="/why-choose-images/newarkairport.jpg"
         imageAlt="Professional Newark airport transfer service"
       />
       <CounterSection

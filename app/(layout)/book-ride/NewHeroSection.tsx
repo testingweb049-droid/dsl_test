@@ -10,7 +10,13 @@ type Slide = {
   title: string;
 };
 
-export default function NewHeroSection() {
+interface NewHeroSectionProps {
+  title?: string;
+  image?: string; // Single image for service pages (disables slider)
+  imageAlt?: string;
+}
+
+export default function NewHeroSection({ title, image, imageAlt }: NewHeroSectionProps = {}) {
   const slides: Slide[] = [
     { src: "/manhattan-skyline.jpg", alt: "Hero image 2", title: "Airport Transfer & Chauffeured Service" },
     { src: "/brunette-businesswoman-posing-inside-car.jpg", alt: "Hero image 1", title: "The Best Fleet Service in New York" },
@@ -21,7 +27,12 @@ export default function NewHeroSection() {
   const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
+  // Only use slider if no single image is provided
+  const useSlider = !image;
+
   useEffect(() => {
+    if (!useSlider) return; // Don't set up slider if using single image
+    
     if (timeoutRef.current) {
       window.clearTimeout(timeoutRef.current);
     }
@@ -37,9 +48,11 @@ export default function NewHeroSection() {
         window.clearTimeout(timeoutRef.current);
       }
     };
-  }, [index, isPaused, slides.length]);
+  }, [index, isPaused, slides.length, useSlider]);
 
   useEffect(() => {
+    if (!useSlider) return; // Don't set up touch handlers if using single image
+    
     function onTouchStart() {
       setIsPaused(true);
     }
@@ -52,45 +65,61 @@ export default function NewHeroSection() {
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
     };
-  }, []);
+  }, [useSlider]);
 
 
   return (
     <section
       className="relative w-full overflow-hidden"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      aria-roledescription="carousel"
-      aria-label="Hero image slider"
+      onMouseEnter={useSlider ? () => setIsPaused(true) : undefined}
+      onMouseLeave={useSlider ? () => setIsPaused(false) : undefined}
+      aria-roledescription={useSlider ? "carousel" : undefined}
+      aria-label={useSlider ? "Hero image slider" : undefined}
     >
       <div className="absolute inset-0 h-[420px] lg:h-screen w-full">
-        {slides.map((s, i) => (
-          <div
-            key={s.src}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(.22,1,.36,1)] ${
-              i === index ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-            }`}
-            aria-hidden={i === index ? "false" : "true"}
-            style={{ willChange: "opacity" }}
-          >
+        {useSlider ? (
+          // Slider mode (home page)
+          slides.map((s, i) => (
+            <div
+              key={s.src}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(.22,1,.36,1)] ${
+                i === index ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+              }`}
+              aria-hidden={i === index ? "false" : "true"}
+              style={{ willChange: "opacity" }}
+            >
+              <Image
+                src={s.src}
+                alt={s.alt ?? `Slide ${i + 1}`}
+                fill
+                sizes="100vw"
+                className={`object-cover object-center w-full h-full ${i===2 ? 'lg:scale-x-[-1]' : ''}  `}
+                priority={i === index}
+              />
+              <div className="absolute inset-0 bg-black/60" />
+            </div>
+          ))
+        ) : (
+          // Single image mode (service pages)
+          <div className="absolute inset-0">
             <Image
-              src={s.src}
-              alt={s.alt ?? `Slide ${i + 1}`}
+              src={image!}
+              alt={imageAlt ?? "Hero image"}
               fill
               sizes="100vw"
-              className={`object-cover object-center w-full h-full ${i===2 ? 'lg:scale-x-[-1]' : ''}  `}
-              priority={i === index}
+              className="object-cover object-center w-full h-full"
+              priority
             />
             <div className="absolute inset-0 bg-black/60" />
           </div>
-        ))}
+        )}
       </div>
 
       <div className="relative z-20">
         <div className="max-w-screen-2xl mx-auto px-4 grid gap-6 lg:grid-cols-2 xl:grid-cols-3 pt-20 lg:py-48 lg:px-5">
           <div className="flex flex-col gap-2 md:gap-5 items-start justify-center h-full w-full xl:col-span-2 max-lg:px-3">
             <h1 className="text-2xl font-semibold lg:text-7xl text-white leading-tight">
-              {slides[index].title}
+              {title || slides[index].title}
             </h1>
             <div className="text-lg lg:text-2xl text-white font-extrabold drop-shadow-lg">
              <span className="text-[#1EACC7]"> 5%</span> OFF on One Way & <span className="text-[#1EACC7]">10%</span> OFF on Return
@@ -105,9 +134,11 @@ export default function NewHeroSection() {
         </div>
       </div>
 
-      <div className="sr-only" aria-live="polite">
-        {`Slide ${index + 1} of ${slides.length}: ${slides[index].title}`}
-      </div>
+      {useSlider && (
+        <div className="sr-only" aria-live="polite">
+          {`Slide ${index + 1} of ${slides.length}: ${slides[index].title}`}
+        </div>
+      )}
     </section>
   );
 }

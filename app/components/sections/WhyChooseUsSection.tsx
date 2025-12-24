@@ -66,7 +66,7 @@ export default function WhyChooseUsSection({
                 src={image}
                 alt={imageAlt}
                 fill
-                className="object-cover object-left"
+                className="object-cover"
               />
             </div>
           </div>

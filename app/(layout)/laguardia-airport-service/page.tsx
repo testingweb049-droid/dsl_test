@@ -11,24 +11,6 @@ import OurFleet from "@/app/components/sections/OurfleetSection";
 import FAQSection from "@/app/components/sections/FAQSection";
 import { MapPin, Home } from "lucide-react";
 
-const whyChooseLGABenefits = [
-  {
-    icon: MapPin,
-    title: "Midtown & Downtown",
-    text: "We offer direct luxury sedan service to Times Square, Grand Central, and Wall Street.",
-  },
-  {
-    icon: MapPin,
-    title: "Brooklyn & Queens",
-    text: "Located right in Queens, we provide quick local car service to Williamsburg, Astoria, and Long Island City.",
-  },
-  {
-    icon: Home,
-    title: "Door-to-Door",
-    text: "Skip the shuttle bus to the subway. Our LGA airport limo takes you directly from the terminal to your hotel lobby.",
-  },
-];
-
 const lgaTerminals = [
   {
     state: "Terminal B",
@@ -80,7 +62,11 @@ const lgaFAQData = [
 export default function LaGuardiaAirportService() {
   return (
     <main>
-      <NewHeroSection />
+      <NewHeroSection 
+        title="LaGuardia Airport Car Service (LGA)" 
+        image="/hero-main-image.jpg"
+        imageAlt="LaGuardia Airport car service"
+      />
       <InfiniteSlide />
       <ServiceContentSection
         mainTitle="Premier LaGuardia Airport Car Service (LGA)"
@@ -94,13 +80,6 @@ export default function LaGuardiaAirportService() {
           { value: "900000", label: "MILES" },
           { value: "30", label: "QUALIFIED CHAUFFEURS" },
         ]}
-      />
-      <WhyChooseUsSection
-        title="The Fastest Transfer from LGA to Manhattan"
-        description="LaGuardia is the closest airport to the city, but traffic can be unpredictable. Our LGA to NYC car service utilizes real-time traffic monitoring to get you to your destination efficiently."
-        benefits={whyChooseLGABenefits}
-        image="/why-choose-us.png"
-        imageAlt="Professional LaGuardia airport transfer service"
       />
       <UseCasesSection
         title="Connecting Flights & Inter-Airport Transfers"
