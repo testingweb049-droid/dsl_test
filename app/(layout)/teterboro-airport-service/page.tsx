@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic";
 
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
 import NewHeroSection from "../book-ride/NewHeroSection";
 import InfiniteSlide from "../book-ride/InfiniteSlide";
 import ServiceContentSection from "@/app/components/sections/ServiceContentSection";
@@ -98,6 +100,12 @@ const teterboroFAQData = [
 
 export default function TeterboroAirportService() {
   return (
+    <>
+      <SEO 
+        title={seoConfig.teterboro.title}
+        description={seoConfig.teterboro.description}
+        url={seoConfig.teterboro.url}
+      />
     <main>
       <NewHeroSection 
         title="Elite Teterboro Airport Car Service (TEB)" 
@@ -139,6 +147,7 @@ export default function TeterboroAirportService() {
       <OurFleet />
       <FAQSection faqs={teterboroFAQData} />
     </main>
+    </>
   );
 }
 

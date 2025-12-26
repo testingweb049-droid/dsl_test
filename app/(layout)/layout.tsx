@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "DSL Limo Services | Luxury Transportation & Chauffeur Services",
   description:
-    "DSL Limo Services provides luxury limousine transportation, airport transfers, corporate rides, wedding limos, and premium chauffeur services.",
+    "Book premier limo service in NYC & NJ. Reliable black car service for JFK, EWR, and LGA airport transfers. Luxury sedans, SUVs & Sprinters. Get a quote today.",
   keywords: [
     "limo service",
     "luxury transportation",
@@ -32,12 +32,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "DSL Limo Services",
     description:
-      "Professional luxury limousine and chauffeur services for airport transfers, weddings, and corporate travel.",
-    url: "https://yourdomain.com",
+      "Book premier limo service in NYC & NJ. Reliable black car service for JFK, EWR, and LGA airport transfers. Luxury sedans, SUVs & Sprinters. Get a quote today.",
+    url: "https://www.dsllimoservice.com",
     siteName: "DSL Limo Services",
     images: [
       {
-        url: "https://yourdomain.com/og-image.jpg",
+        url: "https://www.dsllimoservice.com/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "DSL Limo Services",
@@ -50,11 +50,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "DSL Limo Services",
     description:
-      "Premium luxury transportation and chauffeur service for all occasions.",
-    images: ["https://yourdomain.com/og-image.jpg"],
+      "Book premier limo service in NYC & NJ. Reliable black car service for JFK, EWR, and LGA airport transfers. Luxury sedans, SUVs & Sprinters. Get a quote today.",
+    images: ["https://www.dsllimoservice.com/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://yourdomain.com",
+    canonical: "https://www.dsllimoservice.com",
   },
 };
 
@@ -67,8 +67,8 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "DSL Limo Services",
-    url: "https://yourdomain.com",
-    logo: "https://yourdomain.com/logo.png",
+    url: "https://www.dsllimoservice.com",
+    logo: "https://www.dsllimoservice.com/Logo.png",
     telephone: "+1-000-000-0000",
     address: {
       "@type": "PostalAddress",
@@ -78,7 +78,7 @@ export default function RootLayout({
       postalCode: "00000",
       addressCountry: "USA",
     },
-    image: "https://yourdomain.com/og-image.jpg",
+    image: "https://www.dsllimoservice.com/og-image.jpg",
     description:
       "Premium luxury limousine and chauffeur services for airport, corporate, and special events.",
   };

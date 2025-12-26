@@ -1,5 +1,14 @@
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
+
 export default function PrivacyPolicy() {
   return (
+    <>
+      <SEO 
+        title={seoConfig.privacyPolicy.title}
+        description={seoConfig.privacyPolicy.description}
+        url={seoConfig.privacyPolicy.url}
+      />
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">PRIVACY POLICY</h1>
       <p className="text-sm text-gray-600 mb-8">Last updated: November 17, 2025</p>
@@ -348,5 +357,6 @@ export default function PrivacyPolicy() {
         </section>
       </div>
     </div>
+    </>
   );
 }

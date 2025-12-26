@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic";
 
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
 import NewHeroSection from "../book-ride/NewHeroSection";
 import InfiniteSlide from "../book-ride/InfiniteSlide";
 import ServiceContentSection from "@/app/components/sections/ServiceContentSection";
@@ -64,6 +66,12 @@ const westchesterFAQData = [
 
 export default function WestchesterAirportService() {
   return (
+    <>
+      <SEO 
+        title={seoConfig.westchester.title}
+        description={seoConfig.westchester.description}
+        url={seoConfig.westchester.url}
+      />
     <main>
       <NewHeroSection 
         title="Premium Westchester County Airport Car Service" 
@@ -97,6 +105,7 @@ export default function WestchesterAirportService() {
       <OurFleet />
       <FAQSection faqs={westchesterFAQData} />
     </main>
+    </>
   );
 }
 

@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic";
 
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
 import NewHeroSection from "../book-ride/NewHeroSection";
 import InfiniteSlide from "../book-ride/InfiniteSlide";
 import ServiceContentSection from "@/app/components/sections/ServiceContentSection";
@@ -79,6 +81,12 @@ const newarkFAQData = [
 
 export default function NewarkAirportService() {
   return (
+    <>
+      <SEO 
+        title={seoConfig.newark.title}
+        description={seoConfig.newark.description}
+        url={seoConfig.newark.url}
+      />
     <main>
       <NewHeroSection 
         title="Professional Newark Airport Car Service (EWR)" 
@@ -121,6 +129,7 @@ export default function NewarkAirportService() {
       <OurFleet />
       <FAQSection faqs={newarkFAQData} />
     </main>
+    </>
   );
 }
 

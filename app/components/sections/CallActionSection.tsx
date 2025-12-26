@@ -15,9 +15,9 @@ export default function CallActionSection() {
 
       {/* 🔹 Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
-        <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-snug sm:leading-tight">
+        <h2 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-snug sm:leading-tight">
           OR ANYWHERE YOU NEED US TO TAKE
-        </h1>
+        </h2>
 
         <p className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-xl mx-auto">
           Not only taking to flight, parties, weddings, casinos, birthdays but we

@@ -1,4 +1,5 @@
-
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
 import CallActionSection from "@/app/components/sections/CallActionSection";
 import HeroSection3 from "@/app/components/sections/HeroSection3";
 import ServiceExperienceBanner from "@/app/components/sections/ServiceExperiencedBanner";
@@ -56,6 +57,11 @@ export default function Fleet() {
   ]
   return (
     <>
+      <SEO 
+        title={seoConfig.services.title}
+        description={seoConfig.services.description}
+        url={seoConfig.services.url}
+      />
       <HeroSection3
         title="OUR SERVICES"
         subtitle="We are the most popular limousine service in New York."

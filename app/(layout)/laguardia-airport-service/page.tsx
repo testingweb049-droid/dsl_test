@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic";
 
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
 import NewHeroSection from "../book-ride/NewHeroSection";
 import InfiniteSlide from "../book-ride/InfiniteSlide";
 import ServiceContentSection from "@/app/components/sections/ServiceContentSection";
@@ -61,6 +63,12 @@ const lgaFAQData = [
 
 export default function LaGuardiaAirportService() {
   return (
+    <>
+      <SEO 
+        title={seoConfig.laguardia.title}
+        description={seoConfig.laguardia.description}
+        url={seoConfig.laguardia.url}
+      />
     <main>
       <NewHeroSection 
         title="LaGuardia Airport Car Service (LGA)" 
@@ -94,6 +102,7 @@ export default function LaGuardiaAirportService() {
       <OurFleet />
       <FAQSection faqs={lgaFAQData} />
     </main>
+    </>
   );
 }
 

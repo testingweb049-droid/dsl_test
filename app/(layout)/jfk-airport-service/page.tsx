@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic";
 
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
 import NewHeroSection from "../book-ride/NewHeroSection";
 import InfiniteSlide from "../book-ride/InfiniteSlide";
 import ServiceContentSection from "@/app/components/sections/ServiceContentSection";
@@ -106,6 +108,12 @@ const jfkFAQData = [
 
 export default function JFKAirportService() {
   return (
+    <>
+      <SEO 
+        title={seoConfig.jfk.title}
+        description={seoConfig.jfk.description}
+        url={seoConfig.jfk.url}
+      />
     <main>
       <NewHeroSection 
         title="Premium JFK Airport Car Service & Luxury Transfers" 
@@ -146,6 +154,7 @@ export default function JFKAirportService() {
       <OurFleet />
       <FAQSection faqs={jfkFAQData} />
     </main>
+    </>
   );
 }
 

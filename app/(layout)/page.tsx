@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic"; 
 
+import SEO from "@/app/components/SEO";
+import { seoConfig } from "@/lib/seo-config";
 import AirportsWeServe from "../components/sections/AirpportsWeServe";
 import OurFleet from "../components/sections/OurfleetSection";
 import BestExperienceBanner from "../components/sections/BestExperienceBanner";
@@ -11,6 +13,12 @@ import InfiniteSlide from "./book-ride/InfiniteSlide";
 
 export default function Home() {
   return (
+    <>
+      <SEO 
+        title={seoConfig.home.title}
+        description={seoConfig.home.description}
+        url={seoConfig.home.url}
+      />
       <main >
      <NewHeroSection/>
      <InfiniteSlide/>
@@ -21,5 +29,6 @@ export default function Home() {
      <ServicesSection/>
      <ReviewsSection/>
     </main>
+    </>
   );
 }
